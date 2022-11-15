@@ -7,7 +7,9 @@ MAX_X = 1024
 MAX_Y = 568
 BACKGROUND_COLOR = (30, 30, 30)
 
-SF_PATH = "fluid/FluidR3_GM.sf2"
+SF_PATH = "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+
+EXPLOSION_MAX_TICKS = 100
 
 NOTES_KEYBINDS = {
     pygame.K_1: ("C", 3),

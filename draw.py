@@ -1,3 +1,5 @@
+from random import randint
+
 import pygame
 
 from colors import linear_gradient
@@ -30,13 +32,22 @@ gradient = dict(
 )
 
 
-def draw_keyboard(window, bg_color, x, y, width, height):
-    pygame.draw.rect(window, (255, 255, 255), (x, y, width, height), 0)
+def draw_keyboard(surface, bg_color, x, y, width, height):
+    pygame.draw.rect(surface, (255, 255, 255), (x, y, width, height), 0)
     # borders on each side of the keyboard
-    pygame.draw.rect(window, bg_color, (x, y, offset, height), 0)
-    pygame.draw.rect(window, bg_color, (width - offset, y, offset, height), 0)
+    pygame.draw.rect(surface, bg_color, (x, y, offset, height), 0)
+    pygame.draw.rect(surface, bg_color, (width - offset, y, offset, height), 0)
 
     for x in white_keys_x_coords:
-        pygame.draw.rect(window, black, (x, MAX_Y, key_width, 200), 2)
+        pygame.draw.rect(surface, black, (x, MAX_Y, key_width, 200), 2)
     for x in black_keys_x_coords:
-        pygame.draw.rect(window, black, (x, MAX_Y, key_width // 2, 100), 0)
+        pygame.draw.rect(surface, black, (x, MAX_Y, key_width // 2, 100), 0)
+
+
+def draw_explosion(surface, explosion):
+    for particle_coords, color, _ in explosion:
+        pygame.draw.circle(surface, color, particle_coords, randint(1, 3), 1)
+
+
+def draw_highlight(surface, color, highlight):
+    surface.fill(color, highlight)

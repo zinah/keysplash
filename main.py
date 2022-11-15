@@ -1,10 +1,9 @@
-from math import cos, pi, sin
-from random import gauss, randint, uniform
 import sys
 
 import fluidsynth
 import pygame
 
+from calculate import explode
 from const import (
     BACKGROUND_COLOR,
     MAX_X,
@@ -13,7 +12,14 @@ from const import (
     SF_PATH,
     WINDOW_TITLE,
 )
-from draw import draw_keyboard, key_width, gradient, white_keys
+from draw import (
+    draw_explosion,
+    draw_highlight,
+    draw_keyboard,
+    key_width,
+    gradient,
+    white_keys,
+)
 from music import play_note
 
 
@@ -32,8 +38,6 @@ step = 5
 beams = []
 explosions = []
 note_highlights = []
-explosion_max_ticks = 100
-
 
 
 def check_note_pressed(event):
@@ -54,41 +58,21 @@ def get_key_color(key):
 
 
 def make_highlight(note, octave):
-    return pygame.Rect(
-        *[white_keys.get((note, octave)), MAX_Y], key_width, 200
-    )
+    return pygame.Rect(*[white_keys.get((note, octave)), MAX_Y], key_width, 200)
 
 
 def make_beam(note, octave):
-    return pygame.Rect(
-        *[white_keys.get((note, octave)), 0], key_width, key_width
-    )
+    return pygame.Rect(*[white_keys.get((note, octave)), 0], key_width, key_width)
 
 
-def draw_and_move_explosion(explosion):
+def move_explosion(explosion):
     next_explosion_placement = []
     for particle in explosion:
         particle_coords, color, ticks_left = particle
         x, y = particle_coords
-        pygame.draw.circle(window, color, particle_coords, randint(1, 3), 1)
         if ticks_left - 1 > 0:
             next_explosion_placement.append([[x, y + 1], color, ticks_left - 1])
     return next_explosion_placement
-
-
-def explode(origin_x, origin_y, color):
-    number_of_points = 100
-    boom_particles = []
-    mean_radius = 20
-    sigma_radius = 50
-
-    for i in range(number_of_points):
-        theta = uniform(0, 2 * pi)
-        radius = gauss(mean_radius, sigma_radius)
-        x = origin_x + radius * cos(theta)
-        y = origin_y + radius * sin(theta)
-        boom_particles.append([[x, y], color, explosion_max_ticks])
-    return boom_particles
 
 
 fs = fluidsynth.Synth()
@@ -96,13 +80,13 @@ fs.start(driver="alsa")
 sfid = fs.sfload(SF_PATH)
 fs.program_select(0, sfid, 0, 0)
 
-# creating a running loop
+
 while game_running:
-    # Setup background and keyboard
+    # Reset display
     window.fill(BACKGROUND_COLOR)
     draw_keyboard(window, BACKGROUND_COLOR, 0, MAX_Y, MAX_X, 200)
 
-    # creating a loop to check events that are occurring
+    # Check for key presses
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -116,30 +100,34 @@ while game_running:
             note_highlights.append([make_highlight(note, octave), key_color, 15])
             beams.append([make_beam(note, octave), key_color])
 
-    ticks = pygame.time.get_ticks()
     new_beams = []
     new_explosions = []
     new_highlights = []
 
     for beam, color in beams:
+        # Draw the beam
+        window.fill(color, beam)
+        # Move the beam
         new_x, new_y = move_beam(*beam.topleft)
+        # Beam has not collided with the keyboard yet
         if new_y + key_width < MAX_Y:
             beam.topleft = (new_x, new_y)
             new_beams.append([beam, color])
+        # Beam reached the keyboard
         else:
-            # the origin of the explosion should be in the middle of the top of the beam
+            # The origin of the explosion should be in the middle of the top of the beam
             explosions.append(explode(new_x + key_width // 2, new_y, color))
-        window.fill(color, beam)
     beams = new_beams
 
     for explosion in explosions:
-        next_explosion_placement = draw_and_move_explosion(explosion)
+        draw_explosion(window, explosion)
+        next_explosion_placement = move_explosion(explosion)
         if next_explosion_placement:
             new_explosions.append(next_explosion_placement)
     explosions = new_explosions
 
     for highlight, color, ticks_left in note_highlights:
-        window.fill(color, highlight)
+        draw_highlight(window, color, highlight)
         if ticks_left - 1 > 0:
             new_highlights.append([highlight, color, ticks_left - 1])
     note_highlights = new_highlights
