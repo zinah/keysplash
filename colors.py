@@ -1,3 +1,7 @@
+def get_key_color(gradient, key):
+    return gradient[key]
+
+
 # TODO make a better gradient - maybe rainbow?
 def linear_gradient(start_color, end_color, n):
     """

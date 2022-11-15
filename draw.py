@@ -2,7 +2,6 @@ from random import randint
 
 import pygame
 
-from colors import linear_gradient
 from const import MAX_X, MAX_Y
 from music import white_keys_notes
 
@@ -24,13 +23,6 @@ black_keys_x_coords = [
 
 white_keys = dict(zip(white_keys_notes, white_keys_x_coords))
 
-gradient = dict(
-    zip(
-        white_keys_notes,
-        linear_gradient((255, 0, 0), (0, 0, 255), white_keys_no),
-    )
-)
-
 
 def draw_keyboard(surface, bg_color, x, y, width, height):
     pygame.draw.rect(surface, (255, 255, 255), (x, y, width, height), 0)
@@ -44,8 +36,11 @@ def draw_keyboard(surface, bg_color, x, y, width, height):
         pygame.draw.rect(surface, black, (x, MAX_Y, key_width // 2, 100), 0)
 
 
-def draw_explosion(surface, explosion):
-    for particle_coords, color, _ in explosion:
+def draw_droplet(surface, color, droplet):
+    surface.fill(color, droplet)
+
+def draw_explosion(surface, splash):
+    for particle_coords, color, _ in splash:
         pygame.draw.circle(surface, color, particle_coords, randint(1, 3), 1)
 
 

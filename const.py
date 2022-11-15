@@ -1,13 +1,16 @@
 import pygame
 
 WINDOW_TITLE = "KeySplash!"
+FPS = 60
 
-# TODO better naming, these are boundaries of the space where beams can move
+# TODO better naming, these are boundaries of the space where droplets can fall
 MAX_X = 1024
 MAX_Y = 568
 BACKGROUND_COLOR = (30, 30, 30)
 
 SF_PATH = "/usr/share/sounds/sf2/FluidR3_GM.sf2"
+
+DROPLET_STEP = 5
 
 EXPLOSION_MAX_TICKS = 100
 
