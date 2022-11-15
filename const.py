@@ -10,9 +10,18 @@ BACKGROUND_COLOR = (30, 30, 30)
 
 SF_PATH = "/usr/share/sounds/sf2/FluidR3_GM.sf2"
 
+# The speed of the droplet falling, pixels per tick
 DROPLET_STEP = 5
 
+# The speed of the particles in an explosion falling
+EXPLOSION_STEP = 1
+# How long the explosion stays behind
 EXPLOSION_MAX_TICKS = 100
+EXPLOSION_NUMBER_OF_POINTS = 100
+# Parameters for Gauss distribution of the explosion radius - mean and stadard
+# deviation
+EXPLOSION_MEAN_RADIUS = 20
+EXPLOSION_SIGMA_RADIUS = 50
 
 NOTES_KEYBINDS = {
     pygame.K_1: ("C", 3),

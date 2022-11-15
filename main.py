@@ -16,19 +16,13 @@ from draw import (
     draw_explosion,
     draw_highlight,
     draw_keyboard,
+    make_droplet,
+    make_highlight,
     key_width,
     white_keys,
 )
 from events import check_note_pressed, check_quit_game
 from music import play_note
-
-
-def make_highlight(note, octave):
-    return pygame.Rect(*[white_keys.get((note, octave)), MAX_Y], key_width, 200)
-
-
-def make_droplet(note, octave):
-    return pygame.Rect(*[white_keys.get((note, octave)), 0], key_width, key_width)
 
 
 def main():
@@ -94,6 +88,7 @@ def main():
                 explosions.append(explode(new_x + key_width // 2, new_y, color))
         droplets = new_droplets
 
+        # Draw and move explosions
         for explosion in explosions:
             draw_explosion(window, explosion)
             next_explosion_placement = move_explosion(explosion)
@@ -101,6 +96,7 @@ def main():
                 new_explosions.append(next_explosion_placement)
         explosions = new_explosions
 
+        # Draw the highlights on the pressed keys
         for highlight, color, ticks_left in note_highlights:
             draw_highlight(window, color, highlight)
             if ticks_left - 1 > 0:
