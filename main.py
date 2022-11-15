@@ -1,5 +1,3 @@
-import sys
-
 import fluidsynth
 import pygame
 
@@ -20,6 +18,7 @@ from draw import (
     gradient,
     white_keys,
 )
+from events import check_note_pressed, check_quit_game
 from music import play_note
 
 
@@ -38,15 +37,6 @@ step = 5
 beams = []
 explosions = []
 note_highlights = []
-
-
-def check_note_pressed(event):
-    """
-    Returns note name (e.g. C#) and octave if note detected
-    """
-    if event and event.type == pygame.KEYDOWN and event.key in NOTES_KEYBINDS:
-        return NOTES_KEYBINDS[event.key]
-    return (None, None)
 
 
 def move_beam(x, y):
@@ -82,16 +72,10 @@ fs.program_select(0, sfid, 0, 0)
 
 
 while game_running:
-    # Reset display
-    window.fill(BACKGROUND_COLOR)
-    draw_keyboard(window, BACKGROUND_COLOR, 0, MAX_Y, MAX_X, 200)
-
-    # Check for key presses
+    # Check for events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            fs.delete()
-            sys.exit()
+        # Clean up if the game has ended
+        check_quit_game(event, fs)
 
         note, octave = check_note_pressed(event)
         if note and octave:
@@ -99,6 +83,10 @@ while game_running:
             key_color = get_key_color((note, octave))
             note_highlights.append([make_highlight(note, octave), key_color, 15])
             beams.append([make_beam(note, octave), key_color])
+
+    # Reset display
+    window.fill(BACKGROUND_COLOR)
+    draw_keyboard(window, BACKGROUND_COLOR, 0, MAX_Y, MAX_X, 200)
 
     new_beams = []
     new_explosions = []
