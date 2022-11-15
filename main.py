@@ -53,6 +53,18 @@ def get_key_color(key):
     return gradient[key]
 
 
+def make_highlight(note, octave):
+    return pygame.Rect(
+        *[white_keys.get((note, octave)), MAX_Y], key_width, 200
+    )
+
+
+def make_beam(note, octave):
+    return pygame.Rect(
+        *[white_keys.get((note, octave)), 0], key_width, key_width
+    )
+
+
 def draw_and_move_explosion(explosion):
     next_explosion_placement = []
     for particle in explosion:
@@ -101,16 +113,8 @@ while game_running:
         if note and octave:
             play_note(fs, note, octave)
             key_color = get_key_color((note, octave))
-            new_highlight = pygame.Rect(
-                *[white_keys.get((note, octave)), MAX_Y], key_width, 200
-            )
-            note_highlights.append([new_highlight, key_color, 15])
-
-            new_beam = pygame.Rect(
-                *[white_keys.get((note, octave)), 0], key_width, key_width
-            )
-            # TODO choose color that is not too close to the background color
-            beams.append([new_beam, key_color])
+            note_highlights.append([make_highlight(note, octave), key_color, 15])
+            beams.append([make_beam(note, octave), key_color])
 
     ticks = pygame.time.get_ticks()
     new_beams = []
