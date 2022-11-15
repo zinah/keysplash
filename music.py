@@ -15,6 +15,6 @@ def note_to_number(note, octave):
     return note
 
 
-def play_note(fs, note_name):
-    note_midi_value = note_to_number(*note_name)
+def play_note(fs, note, octave):
+    note_midi_value = note_to_number(note, octave)
     fs.noteon(0, note_midi_value, 60)
