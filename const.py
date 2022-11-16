@@ -17,7 +17,8 @@ DROPLET_STEP = 5
 EXPLOSION_STEP = 1
 # How long the explosion stays behind
 EXPLOSION_MAX_TICKS = 100
-EXPLOSION_NUMBER_OF_POINTS = 100
+# Number of particles in a single explosion
+EXPLOSION_NUMBER_OF_PARTICLES = 100
 # Parameters for Gauss distribution of the explosion radius - mean and stadard
 # deviation
 EXPLOSION_MEAN_RADIUS = 20

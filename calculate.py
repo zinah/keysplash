@@ -1,3 +1,4 @@
+from __future__ import annotations
 from math import cos, pi, sin
 from random import gauss, uniform
 
@@ -5,7 +6,7 @@ from const import (
     DROPLET_STEP,
     EXPLOSION_MAX_TICKS,
     EXPLOSION_MEAN_RADIUS,
-    EXPLOSION_NUMBER_OF_POINTS,
+    EXPLOSION_NUMBER_OF_PARTICLES,
     EXPLOSION_SIGMA_RADIUS,
     EXPLOSION_STEP,
 )
@@ -24,7 +25,13 @@ def move_droplet(x: int, y: int) -> Coordinates:
     return x, y + DROPLET_STEP
 
 
-def explode(origin_x: int, origin_y: int, color: RGBColor) -> Explosion:
+def explode(
+    origin_x: int,
+    origin_y: int,
+    color: RGBColor,
+    number_of_particles: int,
+    max_ticks: int,
+) -> Explosion:
     """
     Create a list of coordinates, colors and initial tick counters for particles
     being a result of a drop of origin coordinates meeting the keyboard
@@ -32,12 +39,12 @@ def explode(origin_x: int, origin_y: int, color: RGBColor) -> Explosion:
     """
     boom_particles = []
 
-    for i in range(EXPLOSION_NUMBER_OF_POINTS):
+    for _ in range(number_of_particles):
         theta = uniform(0, 2 * pi)
         radius = gauss(EXPLOSION_MEAN_RADIUS, EXPLOSION_SIGMA_RADIUS)
         x = origin_x + radius * cos(theta)
         y = origin_y + radius * sin(theta)
-        boom_particles.append([[x, y], color, EXPLOSION_MAX_TICKS])
+        boom_particles.append([[x, y], color, max_ticks])
     return boom_particles
 
 

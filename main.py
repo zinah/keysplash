@@ -8,6 +8,8 @@ from const import (
     FPS,
     MAX_X,
     MAX_Y,
+    EXPLOSION_NUMBER_OF_PARTICLES,
+    EXPLOSION_MAX_TICKS,
     SF_PATH,
     WINDOW_TITLE,
 )
@@ -85,7 +87,15 @@ def main():
             # droplet reached the keyboard
             else:
                 # The origin of the explosion should be in the middle of the top of the droplet
-                explosions.append(explode(new_x + key_width // 2, new_y, color))
+                explosions.append(
+                    explode(
+                        new_x + key_width // 2,
+                        new_y,
+                        color,
+                        EXPLOSION_NUMBER_OF_PARTICLES,
+                        EXPLOSION_MAX_TICKS,
+                    )
+                )
         droplets = new_droplets
 
         # Draw and move explosions
